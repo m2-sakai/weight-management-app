@@ -6,8 +6,8 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Manage Weight App',
-    default: 'Manage Weight App',
+    template: '%s | 体重管理アプリ',
+    default: '体重管理アプリ',
   },
   description: 'Manage Weight App built with App Router',
 };
