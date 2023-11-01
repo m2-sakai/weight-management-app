@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import AppLogo from './ui/app-logo';
-import { lusitana } from './ui/fonts';
+import AppLogo from '@/app/ui/AppLogo';
+import { lusitana } from '@/app/ui/fonts';
 
 export default function Page() {
   return (
