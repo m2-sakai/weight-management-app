@@ -1,14 +1,15 @@
 import Link from 'next/link';
 import AppLogo from '@/app/ui/AppLogo';
 import { PowerIcon } from '@heroicons/react/24/outline';
-import NavLinks from './NavLinks';
+import NavLinks from '@/app/ui/top/NavLinks';
+import { redirect } from 'next/navigation';
 
 export default function SideNav() {
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
       <Link
         className="mb-2 flex h-20 items-end justify-start rounded-md bg-green-600 p-4 md:h-40"
-        href="/top/calender"
+        href="/top"
       >
         <div className="w-32 text-white md:w-40">
           <AppLogo />
@@ -20,6 +21,7 @@ export default function SideNav() {
         <form
           action={async () => {
             'use server';
+            redirect('/'); //TODO: セッション削除
             // await signOut();
           }}
         >
