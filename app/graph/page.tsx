@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Graph',
+  title: 'グラフ',
 };
 
 export default function Page() {
