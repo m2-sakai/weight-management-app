@@ -1,13 +1,20 @@
 'use client';
 
 import { lusitana } from '@/app/ui/fonts';
-import { ArrowRightIcon, AtSymbolIcon, KeyIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowRightIcon,
+  AtSymbolIcon,
+  ExclamationCircleIcon,
+  KeyIcon,
+} from '@heroicons/react/24/outline';
 import { Button } from '../common/Button';
-import { useFormStatus } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
+import { authenticate } from '@/app/lib/actions';
 
 export default function LoginForm() {
+  const [code, action] = useFormState(authenticate, undefined);
   return (
-    <form>
+    <form action={action} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-10 pb-4 pt-8">
         <h1 className={`${lusitana.className} mb-5 text-1xl`}>
           以下のフォームからログインしてください。
@@ -45,6 +52,16 @@ export default function LoginForm() {
             <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
           </div>
           <LoginButton />
+          <div className="flex h-8 items-end space-x-1">
+            {code === 'CredentialSignin' && (
+              <>
+                <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+                <p aria-live="polite" className="text-sm text-red-500">
+                  EmailかPasswordが不正です。
+                </p>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </form>

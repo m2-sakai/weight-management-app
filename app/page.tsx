@@ -34,7 +34,7 @@ export default function Page() {
           <p>さぁ！以下からログインし、新しい自分の始まりを体験しましょう。</p>
           <Link
             href="/login"
-            className="flex items-center gap-5 self-start rounded-lg bg-green-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
+            className="flex items-center gap-5 self-start rounded-lg bg-green-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-green-400 md:text-base"
           >
             <span>ログイン</span>
           </Link>
