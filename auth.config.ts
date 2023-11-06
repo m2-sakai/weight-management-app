@@ -26,4 +26,4 @@ export const authConfig = {
       return true;
     },
   },
-};
+} satisfies NextAuthConfig;
