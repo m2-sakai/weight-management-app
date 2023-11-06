@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  transpilePackages: ['@fullcalendar/common', '@fullcalendar/daygrid', '@fullcalendar/react'],
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
