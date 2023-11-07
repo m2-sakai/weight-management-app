@@ -1,7 +1,21 @@
+'use server';
 import { sql } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
+import { Weight } from '../types/Weight';
 
-export async function selectWeight(userId: string | null, date: string) {
+export async function fetchWeights(userId: string, month: number) {
+  noStore();
+  try {
+    const weight = await sql<Weight>`SELECT *
+      FROM wm_weights
+      WHERE user_id=${userId} AND EXTRACT(MONTH FROM date) = ${month}`;
+    return weight.rows;
+  } catch (error) {
+    throw new Error('Database Error: Failed to fetch Weight list.');
+  }
+}
+
+export async function fetchWeightByDate(userId: string, date: string) {
   noStore();
   try {
     const weight =
@@ -9,22 +23,18 @@ export async function selectWeight(userId: string | null, date: string) {
 
     return weight.rows[0];
   } catch (error) {
-    return {
-      message: 'Database Error: Failed to fetch Weight data.',
-    };
+    throw new Error('Database Error: Failed to fetch Weight data.');
   }
 }
 
 export async function registerWeight(userId: string | null, weight: number, date: string) {
-  console.log('registering... ');
   try {
     await sql`
 		INSERT INTO wm_weights (user_id, weight, date)
-		VALUES (${userId}, ${weight}, ${date})`;
+		VALUES (${userId}, ${weight}, ${date})
+    ON CONFLICT (user_id, date)
+    DO UPDATE SET weight = ${weight}`;
   } catch (error) {
-    return {
-      message: 'Database Error: Failed to Register Weight.',
-    };
+    throw new Error('Database Error: Failed to Register Weight.');
   }
-  console.log('registered Weight');
 }

@@ -8,16 +8,8 @@ import bcrypt from 'bcrypt';
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
-    // const user = await sql<User>`SELECT * from USERS where email=${email}`;
-    const user: User = {
-      id: '410544b2-4001-4271-9855-fec4b6a6442a',
-      name: 'User1',
-      email: 'user1@nextmail.com',
-      password: '$2b$10$XQo7OG8C6hlmkXW/P1lAVu0LiC9XBLUyJ87Z7xVkGIQAYv8Sc8vv.',
-      height: 170,
-    };
-    // return user.rows[0];
-    return user;
+    const user = await sql<User>`SELECT * from wm_users where email=${email}`;
+    return user.rows[0];
   } catch (error) {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');
