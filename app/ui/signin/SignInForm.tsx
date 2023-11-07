@@ -12,6 +12,7 @@ import {
 import { Button } from '../common/Button';
 import { useFormState, useFormStatus } from 'react-dom';
 import { createAccount } from '@/app/lib/actions';
+import Link from 'next/link';
 
 export default function SignInForm() {
   const [code, action] = useFormState(createAccount, undefined);
@@ -95,6 +96,9 @@ export default function SignInForm() {
                 </p>
               </>
             )}
+          </div>
+          <div className="text-right">
+            <Link href={'/login'}>ログインに戻る</Link>
           </div>
         </div>
       </div>

@@ -54,6 +54,8 @@ export const InputModal = ({
               calenderApi.addEvent({
                 title: weight.toString() + ' kg',
                 start: date,
+                allDay: true,
+                display: 'list-item',
               });
               await registerWeight(userId, weight, date);
             }}
