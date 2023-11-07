@@ -1,6 +1,9 @@
 'use server';
 
 import { signIn } from '@/auth';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { sql } from '@vercel/postgres';
 
 export async function authenticate(prevState: string | undefined, formData: FormData) {
   try {

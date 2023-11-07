@@ -1,6 +1,8 @@
-import { useFormState } from 'react-dom';
 import { Button } from '../common/Button';
 import { PlayIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { signOut } from '@/auth';
+import { registerWeight } from '@/app/lib/data';
 
 export const InputModal = ({
   state,
@@ -11,7 +13,13 @@ export const InputModal = ({
   date: string;
   setIsOpenModal: ({ state, date }: { state: boolean; date: string }) => void;
 }) => {
-	
+  const [weight, setWeight] = useState(0);
+  const userId: string | null = '410544b2-4001-4271-9855-fec4b6a6442a'; // セッション情報から取得したい
+
+  // if (userId === null) {
+  //   await signOut();
+  // }
+
   return (
     <div className="ma fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-20">
       <div className="max-w-md rounded-lg bg-gray-300 p-8">
@@ -24,6 +32,9 @@ export const InputModal = ({
           id="weight"
           type="number"
           placeholder="00.0"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setWeight(Number(e.target.value));
+          }}
         />
         <div className="flex justify-between">
           <Button
@@ -40,7 +51,8 @@ export const InputModal = ({
           </Button>
           <Button
             className="mt-4 w-[100px]"
-            onClick={() => {
+            onClick={async () => {
+              await registerWeight(userId, weight, date);
               setIsOpenModal({
                 state: false,
                 date: date,

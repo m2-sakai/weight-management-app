@@ -10,11 +10,11 @@ async function getUser(email: string): Promise<User | undefined> {
   try {
     // const user = await sql<User>`SELECT * from USERS where email=${email}`;
     const user: User = {
-      id: 'id',
-      name: 'name',
-      email: 'user@nextmail.com',
+      id: '410544b2-4001-4271-9855-fec4b6a6442a',
+      name: 'User1',
+      email: 'user1@nextmail.com',
       password: '$2b$10$XQo7OG8C6hlmkXW/P1lAVu0LiC9XBLUyJ87Z7xVkGIQAYv8Sc8vv.',
-      height: 160,
+      height: 170,
     };
     // return user.rows[0];
     return user;
@@ -38,7 +38,9 @@ export const { auth, signIn, signOut } = NextAuth({
           const user = await getUser(email);
           if (!user) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+          if (passwordsMatch) {
+            return user;
+          }
         }
         console.log('Invalid credentials');
         return null;
