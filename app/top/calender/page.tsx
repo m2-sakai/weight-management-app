@@ -39,7 +39,13 @@ export default function Page() {
           handleDateClick(e.dateStr);
         }}
       />
-      {isOpenModal.state && <InputModal state={isOpenModal.state} date={isOpenModal.date} />}
+      {isOpenModal.state && (
+        <InputModal
+          state={isOpenModal.state}
+          date={isOpenModal.date}
+          setIsOpenModal={setIsOpenModal}
+        />
+      )}
     </div>
   );
 }
