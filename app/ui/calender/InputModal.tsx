@@ -3,15 +3,16 @@ import { PlayIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { signOut } from '@/auth';
 import { registerWeight } from '@/app/lib/data';
+import { CalendarApi } from '@fullcalendar/core/index.js';
 
 export const InputModal = ({
-  state,
   date,
+  calenderApi,
   setIsOpenModal,
 }: {
-  state: boolean;
   date: string;
-  setIsOpenModal: ({ state, date }: { state: boolean; date: string }) => void;
+  calenderApi: CalendarApi;
+  setIsOpenModal: (state: boolean) => void;
 }) => {
   const [weight, setWeight] = useState(0);
   const userId: string | null = '410544b2-4001-4271-9855-fec4b6a6442a'; // セッション情報から取得したい
@@ -22,10 +23,10 @@ export const InputModal = ({
 
   return (
     <div className="ma fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-20">
-      <div className="max-w-md rounded-lg bg-gray-300 p-8">
-        <h2 className="mb-2 text-xl font-bold">{date}</h2>
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="weight">
-          Weight
+      <div className="max-w-md rounded-lg bg-white p-8">
+        <h2 className="mb-2 text-2xl text-black font-bold">{date}</h2>
+        <label className="block text-black text-base mb-2" htmlFor="weight">
+          Weight (kg)
         </label>
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -40,10 +41,7 @@ export const InputModal = ({
           <Button
             className="mt-4 w-[100px]"
             onClick={() => {
-              setIsOpenModal({
-                state: false,
-                date: date,
-              });
+              setIsOpenModal(false);
             }}
           >
             <XMarkIcon className="h-5 w-8 text-gray-50" />
@@ -52,11 +50,12 @@ export const InputModal = ({
           <Button
             className="mt-4 w-[100px]"
             onClick={async () => {
-              await registerWeight(userId, weight, date);
-              setIsOpenModal({
-                state: false,
-                date: date,
+              setIsOpenModal(false);
+              calenderApi.addEvent({
+                title: weight.toString() + ' kg',
+                start: date,
               });
+              await registerWeight(userId, weight, date);
             }}
           >
             <PlayIcon className="h-5 w-8 text-gray-50" />
