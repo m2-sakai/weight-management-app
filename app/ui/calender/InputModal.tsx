@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { signOut } from '@/auth';
 import { registerWeight } from '@/app/lib/data';
 import { CalendarApi } from '@fullcalendar/core/index.js';
+import clsx from 'clsx';
 
 export const InputModal = ({
   date,
@@ -15,6 +16,7 @@ export const InputModal = ({
   setIsOpenModal: (state: boolean) => void;
 }) => {
   const [weight, setWeight] = useState(0);
+  const [isRegister, setIsRegister] = useState(false);
   const userId: string | null = '410544b2-4001-4271-9855-fec4b6a6442a'; // セッション情報から取得したい
 
   // if (userId === null) {
@@ -22,7 +24,7 @@ export const InputModal = ({
   // }
 
   return (
-    <div className="ma fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-20">
+    <div className="ma fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-20 z-10">
       <div className="max-w-md rounded-lg bg-white p-8">
         <h2 className="mb-2 text-2xl text-black font-bold">{date}</h2>
         <label className="block text-black text-base mb-2" htmlFor="weight">
@@ -35,6 +37,7 @@ export const InputModal = ({
           placeholder="00.0"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setWeight(Number(e.target.value));
+            weight > 1 && weight < 1000 ? setIsRegister(true) : setIsRegister(false);
           }}
         />
         <div className="flex justify-between">
@@ -48,7 +51,11 @@ export const InputModal = ({
             Cancel
           </Button>
           <Button
-            className="mt-4 w-[100px]"
+            className={clsx('mt-4 w-[100px]', {
+              'cursor-not-allowed': !isRegister,
+              'bg-gray-400': !isRegister,
+              'hover:bg-gray-400': !isRegister,
+            })}
             onClick={async () => {
               setIsOpenModal(false);
               calenderApi.addEvent({
@@ -59,6 +66,7 @@ export const InputModal = ({
               });
               await registerWeight(userId, weight, date);
             }}
+            disabled={!isRegister}
           >
             <PlayIcon className="h-5 w-8 text-gray-50" />
             登録
