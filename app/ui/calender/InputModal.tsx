@@ -49,8 +49,6 @@ export const InputModal = ({
           <Button
             className={clsx('mt-4 w-[100px]', {
               'cursor-not-allowed': !isRegister,
-              'bg-gray-400': !isRegister,
-              'hover:bg-gray-400': !isRegister,
             })}
             onClick={async () => {
               setIsOpenModal(false);
