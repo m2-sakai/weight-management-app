@@ -1,27 +1,23 @@
 import { Button } from '../common/Button';
 import { PlayIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import { signOut } from '@/auth';
 import { registerWeight } from '@/app/lib/data';
 import { CalendarApi } from '@fullcalendar/core/index.js';
 import clsx from 'clsx';
 
 export const InputModal = ({
+  email,
   date,
   calenderApi,
   setIsOpenModal,
 }: {
+  email: string;
   date: string;
   calenderApi: CalendarApi;
   setIsOpenModal: (state: boolean) => void;
 }) => {
   const [weight, setWeight] = useState(0);
   const [isRegister, setIsRegister] = useState(false);
-  const userId: string | null = '410544b2-4001-4271-9855-fec4b6a6442a'; // セッション情報から取得したい
-
-  // if (userId === null) {
-  //   await signOut();
-  // }
 
   return (
     <div className="ma fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-20 z-10">
@@ -64,7 +60,7 @@ export const InputModal = ({
                 allDay: true,
                 display: 'list-item',
               });
-              await registerWeight(userId, weight, date);
+              await registerWeight(email, weight, date);
             }}
             disabled={!isRegister}
           >

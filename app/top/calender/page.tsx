@@ -7,6 +7,9 @@ import jaLocale from '@fullcalendar/core/locales/ja';
 import { useCallback, useEffect, useState } from 'react';
 import { InputModal } from '@/app/ui/calender/InputModal';
 import { fetchWeights } from '@/app/lib/data';
+import { auth } from '@/auth';
+import { getSession } from '@/app/lib/actions';
+import { UserSession } from '@/app/types/UserSession';
 
 type AddEventState = {
   date: string;
@@ -21,17 +24,19 @@ type Event = {
 };
 
 export default function Page() {
+  const [email, setEmail] = useState<string>('');
   const [initialEvent, setInitialEvent] = useState<Event[]>([]);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [addEvent, setAddEvent] = useState<AddEventState>({ date: '', calenderApi: undefined });
 
-  const userId = '410544b2-4001-4271-9855-fec4b6a6442a'; // セッションから取得する
-
   useEffect(() => {
     const data = async () => {
+      const session: UserSession = await getSession();
+      setEmail(session.email);
+
       const currentDate: Date = new Date();
       const currentMonth: number = currentDate.getMonth() + 1;
-      const weightList = await fetchWeights(userId, currentMonth);
+      const weightList = await fetchWeights(session.email, currentMonth);
       const initialEventList: Event[] = [];
       weightList.forEach((weight) => {
         const event: Event = {
@@ -72,6 +77,7 @@ export default function Page() {
       />
       {isOpenModal && (
         <InputModal
+          email={email}
           date={addEvent.date}
           calenderApi={addEvent.calenderApi}
           setIsOpenModal={setIsOpenModal}

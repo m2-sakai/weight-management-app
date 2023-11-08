@@ -97,6 +97,7 @@ export default function SignInForm() {
               </>
             )}
           </div>
+          <br />
           <div className="text-right">
             <Link href={'/login'}>ログインに戻る</Link>
           </div>

@@ -1,11 +1,13 @@
 'use server';
 
-import { signIn } from '@/auth';
+import { auth, signIn } from '@/auth';
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
+import { UserSession } from '@/app/types/UserSession';
+import { signOut } from 'next-auth/react';
 
 const CreateUser = z.object({
   name: z.string(),
@@ -13,6 +15,26 @@ const CreateUser = z.object({
   password: z.string(),
   height: z.string(),
 });
+
+export const getSession = async (): Promise<UserSession> => {
+  const session = await auth();
+  let userSession: UserSession = {
+    expired: '',
+    userName: '',
+    email: '',
+  };
+
+  if (session && session.user) {
+    userSession.expired = session.expires;
+    if (session.user.name) userSession.userName = session.user.name;
+    if (session.user.email) userSession.email = session.user.email;
+
+    return userSession;
+  } else {
+    await signOut();
+  }
+  return userSession;
+};
 
 export async function authenticate(prevState: string | undefined, formData: FormData) {
   try {

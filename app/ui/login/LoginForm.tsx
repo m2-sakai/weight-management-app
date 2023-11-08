@@ -63,6 +63,7 @@ export default function LoginForm() {
               </>
             )}
           </div>
+          <br />
           <div className="text-right">
             アカウントを作成する場合は<Link href={'/signin'}>こちら</Link>
           </div>
