@@ -75,6 +75,7 @@ export default function Page() {
         }}
         events={initialEvent}
       />
+      <p className="text-[30px]">現在の体重：</p>
       {isOpenModal && (
         <InputModal
           email={email}

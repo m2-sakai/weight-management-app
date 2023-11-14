@@ -6,9 +6,12 @@ import { Weight } from '../types/Weight';
 export async function fetchWeights(email: string, month: number) {
   noStore();
   try {
+    // カレンダーは前後月も少し表示されるため、3カ月分取得する
     const weight = await sql<Weight>`SELECT *
       FROM wm_weights
-      WHERE user_id=(SELECT id FROM wm_users WHERE email=${email}) AND EXTRACT(MONTH FROM date) = ${month}`;
+      WHERE user_id=(SELECT id FROM wm_users WHERE email=${email}) AND EXTRACT(MONTH FROM date) <= ${
+      month + 1
+    } AND ${month - 1} <= EXTRACT(MONTH FROM date)`;
     return weight.rows;
   } catch (error) {
     throw new Error('Database Error: Failed to fetch Weight list.');
