@@ -6,10 +6,12 @@ import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import jaLocale from '@fullcalendar/core/locales/ja';
 import { useCallback, useEffect, useState } from 'react';
 import { InputModal } from '@/app/ui/calender/InputModal';
-import { fetchWeights } from '@/app/lib/data';
-import { auth } from '@/auth';
+import { fetchWeightsForCalender } from '@/app/lib/weight';
 import { getSession } from '@/app/lib/actions';
 import { UserSession } from '@/app/types/UserSession';
+import { getUser } from '@/app/lib/user';
+import { User } from '@/app/types/User';
+import { redirect } from 'next/navigation';
 
 type AddEventState = {
   date: string;
@@ -25,6 +27,8 @@ type Event = {
 
 export default function Page() {
   const [email, setEmail] = useState<string>('');
+  const [heights, setHeights] = useState<number>(0);
+  const [currentWeights, setCurrentWeights] = useState<number>(0);
   const [initialEvent, setInitialEvent] = useState<Event[]>([]);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [addEvent, setAddEvent] = useState<AddEventState>({ date: '', calenderApi: undefined });
@@ -32,11 +36,16 @@ export default function Page() {
   useEffect(() => {
     const data = async () => {
       const session: UserSession = await getSession();
-      setEmail(session.email);
+      const user: User = await getUser(session.email);
+      if (user === undefined) {
+        redirect('/');
+      }
+      setEmail(user.email);
+      setHeights(user.height);
 
       const currentDate: Date = new Date();
       const currentMonth: number = currentDate.getMonth() + 1;
-      const weightList = await fetchWeights(session.email, currentMonth);
+      const weightList = await fetchWeightsForCalender(session.email, currentMonth);
       const initialEventList: Event[] = [];
       weightList.forEach((weight) => {
         const event: Event = {
@@ -46,6 +55,11 @@ export default function Page() {
           display: 'list-item',
         };
         initialEventList.push(event);
+
+        const compareDate = new Date(weight.date);
+        if (compareDate.toDateString() === currentDate.toDateString()) {
+          setCurrentWeights(weight.weight);
+        }
       });
       setInitialEvent(initialEventList);
     };
@@ -75,7 +89,10 @@ export default function Page() {
         }}
         events={initialEvent}
       />
-      <p className="text-[30px]">現在の体重：</p>
+      <p className="text-[30px]">今日の体重: {currentWeights} kg</p>
+      <p className="text-[20px]">
+        BMI: {(currentWeights / (heights / 100) / (heights / 100)).toFixed(1)}
+      </p>
       {isOpenModal && (
         <InputModal
           email={email}

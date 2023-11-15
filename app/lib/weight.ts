@@ -3,7 +3,7 @@ import { sql } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Weight } from '../types/Weight';
 
-export async function fetchWeights(email: string, month: number) {
+export async function fetchWeightsForCalender(email: string, month: number) {
   noStore();
   try {
     // カレンダーは前後月も少し表示されるため、3カ月分取得する
@@ -14,7 +14,23 @@ export async function fetchWeights(email: string, month: number) {
     } AND ${month - 1} <= EXTRACT(MONTH FROM date)`;
     return weight.rows;
   } catch (error) {
-    throw new Error('Database Error: Failed to fetch Weight list.');
+    throw new Error('Database Error: Failed to fetch Weight list for calender.');
+  }
+}
+
+export async function fetchWeightsForGraph(email: string, range: number) {
+  noStore();
+  try {
+    const day = new Date();
+    day.setDate(day.getDate() - range);
+    const weight = await sql<Weight>`SELECT *
+      FROM wm_weights
+      WHERE user_id=(SELECT id FROM wm_users WHERE email=${email}) AND date > ${
+      day.toISOString().split('T')[0]
+    };`;
+    return weight.rows;
+  } catch (error) {
+    throw new Error('Database Error: Failed to fetch Weight list for graph.');
   }
 }
 

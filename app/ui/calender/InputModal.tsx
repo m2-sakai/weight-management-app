@@ -1,7 +1,7 @@
 import { Button } from '../common/Button';
 import { PlayIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import { registerWeight } from '@/app/lib/data';
+import { registerWeight } from '@/app/lib/weight';
 import { CalendarApi } from '@fullcalendar/core/index.js';
 import clsx from 'clsx';
 
