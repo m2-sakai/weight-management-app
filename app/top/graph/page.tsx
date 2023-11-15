@@ -4,7 +4,7 @@ import { getSession } from '@/app/lib/actions';
 import { fetchWeightsForGraph } from '@/app/lib/weight';
 import { UserSession } from '@/app/types/UserSession';
 import { Weight } from '@/app/types/Weight';
-import { GraphTab, GraphTabs } from '@/app/ui/graph/GraphTabs';
+import { GraphTabs } from '@/app/ui/graph/GraphTabs';
 import {
   Chart as ChartJS,
   CategoryScale,
