@@ -23,10 +23,24 @@ type GraphWeight = {
   date: string;
   weight: number | null;
 };
+
 const dateFormatOption: Intl.DateTimeFormatOptions = {
   year: 'numeric',
   month: '2-digit',
   day: '2-digit',
+};
+
+const graphOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top' as const,
+    },
+    title: {
+      display: true,
+      text: '体重グラフ',
+    },
+  },
 };
 export default function Page() {
   const [dayRange, setDayRange] = useState<number>(7);
@@ -37,7 +51,6 @@ export default function Page() {
       const session: UserSession = await getSession();
       const weightList = await fetchWeightsForGraph(session.email, dayRange);
       const graphList: GraphWeight[] = [];
-      console.log('labelDateArray:' + labelDateArray);
       labelDateArray.forEach((labelDate, index) => {
         weightList.forEach((weight) => {
           const compareDate = new Date(weight.date)
@@ -85,19 +98,6 @@ export default function Page() {
     data(labelDateArray);
   }, [dayRange]);
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: '体重グラフ',
-      },
-    },
-  };
-
   const data = {
     labels: graphWeights.map((weight) => weight['date']),
     datasets: [
@@ -112,7 +112,7 @@ export default function Page() {
   return (
     <div>
       <GraphTabs setDayRange={setDayRange} />
-      <Line options={options} data={data} />
+      <Line options={graphOptions} data={data} />
     </div>
   );
 }
