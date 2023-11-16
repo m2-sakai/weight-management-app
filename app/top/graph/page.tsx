@@ -23,6 +23,11 @@ type GraphWeight = {
   date: string;
   weight: number | null;
 };
+const dateFormatOption: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+};
 export default function Page() {
   const [dayRange, setDayRange] = useState<number>(7);
   const [graphWeights, setGraphWeights] = useState<GraphWeight[]>([]);
@@ -35,12 +40,11 @@ export default function Page() {
       console.log('labelDateArray:' + labelDateArray);
       labelDateArray.forEach((labelDate, index) => {
         weightList.forEach((weight) => {
-          // console.log(weight.date);
-          const compareDate = new Date(weight.date);
-          console.log(compareDate);
-          compareDate.setDate(compareDate.getDate() + 1);
-          console.log(compareDate.toISOString().split('T')[0]);
-          if (labelDate === compareDate.toISOString().split('T')[0]) {
+          const compareDate = new Date(weight.date)
+            .toLocaleDateString('ja-JP', dateFormatOption)
+            .split('/')
+            .join('-');
+          if (labelDate === compareDate) {
             graphList.push({
               date: labelDate,
               weight: weight.weight,
@@ -71,7 +75,9 @@ export default function Page() {
     startDate.setDate(currentDate.getDate() - dayRange + 1);
     let labelDateArray: string[] = [];
     while (startDate <= currentDate) {
-      labelDateArray.push(startDate.toISOString().split('T')[0]);
+      labelDateArray.push(
+        startDate.toLocaleDateString('ja-JP', dateFormatOption).split('/').join('-')
+      );
       startDate.setDate(startDate.getDate() + 1);
     }
 
