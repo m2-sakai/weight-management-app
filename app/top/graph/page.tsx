@@ -3,7 +3,6 @@
 import { getSession } from '@/app/lib/actions';
 import { fetchWeightsForGraph } from '@/app/lib/weight';
 import { UserSession } from '@/app/types/UserSession';
-import { Weight } from '@/app/types/Weight';
 import { GraphTabs } from '@/app/ui/graph/GraphTabs';
 import {
   Chart as ChartJS,
@@ -61,8 +60,10 @@ export default function Page() {
     };
 
     // label生成
-    const currentDate = new Date();
-    const startDate = new Date();
+    const currentDate = new Date(
+      Date.now() + (new Date().getTimezoneOffset() + 9 * 60) * 60 * 1000
+    );
+    const startDate = new Date(Date.now() + (new Date().getTimezoneOffset() + 9 * 60) * 60 * 1000);
     startDate.setDate(currentDate.getDate() - dayRange + 1);
     let labelDateArray: string[] = [];
     while (startDate <= currentDate) {
