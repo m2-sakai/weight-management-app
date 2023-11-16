@@ -20,36 +20,58 @@ import { Line } from 'react-chartjs-2';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
+type GraphWeight = {
+  date: string;
+  weight: number | null;
+};
 export default function Page() {
   const [dayRange, setDayRange] = useState<number>(7);
-  const [weights, setWeights] = useState<Weight[]>([]);
-  const [labels, setLabels] = useState<string[]>([]);
+  const [graphWeights, setGraphWeights] = useState<GraphWeight[]>([]);
 
   useEffect(() => {
-    const data = async () => {
+    const data = async (labelDateArray: string[]) => {
       const session: UserSession = await getSession();
       const weightList = await fetchWeightsForGraph(session.email, dayRange);
-      weightList.sort((a, b) => {
+      const graphList: GraphWeight[] = [];
+      labelDateArray.forEach((labelDate, index) => {
+        weightList.forEach((weight) => {
+          const compareDate = new Date(weight.date);
+          compareDate.setDate(compareDate.getDate() + 1);
+          if (labelDate === compareDate.toISOString().split('T')[0]) {
+            graphList.push({
+              date: labelDate,
+              weight: weight.weight,
+            });
+          }
+        });
+        if (graphList[index] === undefined) {
+          graphList.push({
+            date: labelDate,
+            weight: null,
+          });
+        }
+      });
+
+      graphList.sort((a, b) => {
         const x = new Date(a.date);
         const y = new Date(b.date);
         return x.getTime() - y.getTime();
       });
-      setWeights(weightList);
+      setGraphWeights(graphList);
     };
 
     // label生成
     const currentDate = new Date();
     const startDate = new Date();
     startDate.setDate(currentDate.getDate() - dayRange + 1);
-    let labelArray: string[] = [];
+    let labelDateArray: string[] = [];
     while (startDate <= currentDate) {
-      labelArray.push(startDate.toISOString().split('T')[0]);
+      labelDateArray.push(startDate.toISOString().split('T')[0]);
       startDate.setDate(startDate.getDate() + 1);
     }
-    setLabels(labelArray);
 
     // data fetch
-    data();
+    data(labelDateArray);
   }, [dayRange]);
 
   const options = {
@@ -66,17 +88,11 @@ export default function Page() {
   };
 
   const data = {
-    labels,
+    labels: graphWeights.map((weight) => weight['date']),
     datasets: [
       {
         label: '体重 kg',
-        data: weights
-          .filter((weight) => {
-            const day = new Date(weight.date);
-            day.setDate(day.getDate() + 1);
-            return labels.includes(day.toISOString().split('T')[0]);
-          })
-          .map((item) => item['weight']),
+        data: graphWeights.map((weight) => weight['weight']),
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
     ],
