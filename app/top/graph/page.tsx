@@ -32,8 +32,10 @@ export default function Page() {
       const session: UserSession = await getSession();
       const weightList = await fetchWeightsForGraph(session.email, dayRange);
       const graphList: GraphWeight[] = [];
+      console.log('labelDateArray:' + labelDateArray);
       labelDateArray.forEach((labelDate, index) => {
         weightList.forEach((weight) => {
+          console.log(weight.date);
           const compareDate = new Date(weight.date);
           compareDate.setDate(compareDate.getDate() + 1);
           if (labelDate === compareDate.toISOString().split('T')[0]) {
