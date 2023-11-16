@@ -39,6 +39,7 @@ export default function Page() {
           const compareDate = new Date(weight.date);
           console.log(compareDate);
           compareDate.setDate(compareDate.getDate() + 1);
+          console.log(compareDate.toISOString().split('T')[0]);
           if (labelDate === compareDate.toISOString().split('T')[0]) {
             graphList.push({
               date: labelDate,
