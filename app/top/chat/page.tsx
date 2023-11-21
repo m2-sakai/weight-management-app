@@ -6,6 +6,7 @@ import { Message } from '@/app/types/Message';
 import { Chat } from '@/app/ui/chat/Chat';
 import InputForm from '@/app/ui/chat/InputForm';
 import { chat } from '@/app/lib/chat';
+import { Flex } from '@chakra-ui/react';
 
 export default function Page() {
   const [chats, setChats] = useState<Message[]>([
@@ -39,6 +40,11 @@ export default function Page() {
             return <Chat role={chat.role} content={chat.content} key={index} />;
           })}
         </AnimatePresence>
+        {isSubmitting && (
+          <Flex alignSelf="flex-start" px="2rem" py="0.5rem">
+            ・・・
+          </Flex>
+        )}
       </div>
       <InputForm onSubmit={handleSubmit} />
     </div>
