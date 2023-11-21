@@ -32,6 +32,7 @@ const dateFormatOption: Intl.DateTimeFormatOptions = {
 
 const graphOptions = {
   responsive: true,
+  spanGaps: true,
   plugins: {
     legend: {
       position: 'top' as const,
