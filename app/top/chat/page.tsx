@@ -1,9 +1,46 @@
-import { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'チャット',
-};
+import { AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { Message } from '@/app/types/Message';
+import { Chat } from '@/app/ui/chat/Chat';
+import InputForm from '@/app/ui/chat/InputForm';
+import { chat } from '@/app/lib/chat';
 
 export default function Page() {
-  return <p>Chat Page</p>;
+  const [chats, setChats] = useState<Message[]>([
+    {
+      role: 'system',
+      content: '',
+    },
+  ]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (message: Message) => {
+    try {
+      setIsSubmitting(true);
+      setChats((prev) => [...prev, message]);
+
+      const res = await chat(chats, message);
+
+      setChats((prev) => [...prev, res]);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="w-auto bg-white md:rounded-lg md:shadow-md p-4 md:p-10 my-10">
+      <div className="mb-10">
+        <AnimatePresence>
+          {chats.slice(1, chats.length).map((chat, index) => {
+            return <Chat role={chat.role} content={chat.content} key={index} />;
+          })}
+        </AnimatePresence>
+      </div>
+      <InputForm onSubmit={handleSubmit} />
+    </div>
+  );
 }

@@ -10,6 +10,9 @@
     "seed": "node -r dotenv/config ./scripts/seed.js"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@fullcalendar/core": "^6.1.9",
     "@fullcalendar/daygrid": "^6.1.9",
     "@fullcalendar/interaction": "^6.1.9",
@@ -21,12 +24,15 @@
     "bcrypt": "^5.1.1",
     "chart.js": "^4.4.0",
     "clsx": "^2.0.0",
+    "framer-motion": "^10.16.5",
     "next": "14.0.1",
     "next-auth": "^5.0.0-beta.3",
     "next-transpile-modules": "^10.0.1",
+    "openai": "^4.19.0",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
+    "react-icons": "^4.12.0",
     "uuid": "^9.0.1",
     "zod": "^3.22.4"
   },
