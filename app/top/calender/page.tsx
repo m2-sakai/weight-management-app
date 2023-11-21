@@ -25,6 +25,12 @@ type Event = {
   display: string;
 };
 
+const dateFormatOption: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+};
+
 export default function Page() {
   const [email, setEmail] = useState<string>('');
   const [heights, setHeights] = useState<number>(0);
@@ -32,6 +38,7 @@ export default function Page() {
   const [initialEvent, setInitialEvent] = useState<Event[]>([]);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [addEvent, setAddEvent] = useState<AddEventState>({ date: '', calenderApi: undefined });
+  const [selectedDate, setSelectedDate] = useState<string>('');
 
   useEffect(() => {
     const data = async () => {
@@ -66,13 +73,28 @@ export default function Page() {
     data();
   }, []);
 
-  const handleDateClick = useCallback((clickInfo: DateClickArg) => {
-    setAddEvent({
-      date: clickInfo.dateStr,
-      calenderApi: clickInfo.view.calendar,
-    });
-    setIsOpenModal(true);
-  }, []);
+  const handleDateClick = useCallback(
+    (clickInfo: DateClickArg) => {
+      if (selectedDate === clickInfo.dateStr) {
+        setAddEvent({
+          date: clickInfo.dateStr,
+          calenderApi: clickInfo.view.calendar,
+        });
+        setIsOpenModal(true);
+      } else {
+        const eventInfo = initialEvent.filter((event) => {
+          const compareDate = new Date(event.date)
+            .toLocaleDateString('ja-JP', dateFormatOption)
+            .split('/')
+            .join('-');
+          return compareDate === clickInfo.dateStr;
+        });
+        setCurrentWeights(Number(eventInfo[0].title.replace('kg', '').trim()));
+      }
+      setSelectedDate(clickInfo.dateStr);
+    },
+    [selectedDate, initialEvent]
+  );
 
   return (
     <div>
@@ -89,7 +111,7 @@ export default function Page() {
         }}
         events={initialEvent}
       />
-      <p className="text-[30px]">今日の体重: {currentWeights} kg</p>
+      <p className="text-[30px]">体重: {currentWeights} kg</p>
       <p className="text-[20px]">
         BMI: {(currentWeights / (heights / 100) / (heights / 100)).toFixed(1)}
       </p>
