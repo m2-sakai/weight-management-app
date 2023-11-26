@@ -154,7 +154,7 @@ export default function Page() {
   return (
     <div>
       <GraphTabs setDayRange={setDayRange} />
-      <Line options={graphOptions} data={data} />
+      <Line height={200} options={graphOptions} data={data} />
     </div>
   );
 }
