@@ -13,6 +13,7 @@ import { Button } from '../common/Button';
 import { useFormState, useFormStatus } from 'react-dom';
 import { createAccount } from '@/app/lib/actions';
 import Link from 'next/link';
+import { MdOutlineHeight, MdOutlineMonitorWeight } from 'react-icons/md';
 
 export default function SignInForm() {
   const [code, action] = useFormState(createAccount, undefined);
@@ -83,7 +84,23 @@ export default function SignInForm() {
                 placeholder="Enter your user height"
                 required
               />
-              <WrenchIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <MdOutlineHeight className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+          <div className="w-full">
+            <label className="mb-3 mt-5 block text-xs font-medium text-gray-900" htmlFor="goal">
+              目標体重 (kg)
+            </label>
+            <div className="relative">
+              <input
+                className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                id="goal"
+                name="goal"
+                type="number"
+                placeholder="Enter your user goal weights"
+                required
+              />
+              <MdOutlineMonitorWeight className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
           <SignInButton />

@@ -14,6 +14,7 @@ const CreateUser = z.object({
   email: z.string(),
   password: z.string(),
   height: z.string(),
+  goal: z.string(),
 });
 
 export const getSession = async (): Promise<UserSession> => {
@@ -53,6 +54,7 @@ export async function createAccount(prevState: string | undefined, formData: For
     email: formData.get('email'),
     password: formData.get('password'),
     height: formData.get('height'),
+    goal: formData.get('goal'),
   });
 
   if (!validatedFields.success) {
@@ -61,15 +63,16 @@ export async function createAccount(prevState: string | undefined, formData: For
   }
 
   const id = uuidv4();
-  const { name, email, password, height } = validatedFields.data;
+  const { name, email, password, height, goal } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
   const heightNum = Number(height);
-
+  const goalNum = Number(goal);
   try {
     await sql`
-		INSERT INTO wm_users (id, name, email, password, height)
-		VALUES (${id}, ${name}, ${email}, ${hashedPassword}, ${heightNum})`;
+		INSERT INTO wm_users (id, name, email, password, height, goal)
+		VALUES (${id}, ${name}, ${email}, ${hashedPassword}, ${heightNum}, ${goalNum})`;
   } catch (error) {
+    console.log(error);
     return 'FailedSignIn';
   }
 

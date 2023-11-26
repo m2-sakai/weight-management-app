@@ -16,8 +16,21 @@ import {
 } from 'chart.js';
 import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import annotationPlugin from 'chartjs-plugin-annotation';
+import { getUser } from '@/app/lib/user';
+import { redirect } from 'next/navigation';
+import { User } from '@/app/types/User';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  annotationPlugin
+);
 
 type GraphWeight = {
   date: string;
@@ -30,26 +43,19 @@ const dateFormatOption: Intl.DateTimeFormatOptions = {
   day: '2-digit',
 };
 
-const graphOptions = {
-  responsive: true,
-  spanGaps: true,
-  plugins: {
-    legend: {
-      position: 'top' as const,
-    },
-    title: {
-      display: true,
-      text: '体重グラフ',
-    },
-  },
-};
 export default function Page() {
   const [dayRange, setDayRange] = useState<number>(7);
+  const [goal, setGoal] = useState<number>(0.0);
   const [graphWeights, setGraphWeights] = useState<GraphWeight[]>([]);
 
   useEffect(() => {
     const data = async (labelDateArray: string[]) => {
       const session: UserSession = await getSession();
+      const user: User = await getUser(session.email);
+      if (user === undefined) {
+        redirect('/');
+      }
+      setGoal(user.goal);
       const weightList = await fetchWeightsForGraph(session.email, dayRange);
       const graphList: GraphWeight[] = [];
       labelDateArray.forEach((labelDate, index) => {
@@ -108,6 +114,41 @@ export default function Page() {
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
     ],
+  };
+
+  const graphOptions = {
+    responsive: true,
+    spanGaps: true,
+    scales: {
+      y: {
+        min: goal !== 0 ? goal - 1 : 0,
+      },
+    },
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+        text: '体重グラフ',
+      },
+      annotation: {
+        annotations: {
+          goalLine: {
+            yMin: goal !== 0 ? goal : 0,
+            yMax: goal !== 0 ? goal : 0,
+            borderColor: 'red',
+            borderWidth: 2,
+            borderDash: [2, 2],
+            label: {
+              display: true,
+              content: '目標',
+              backgroundColor: 'lightpink',
+            },
+          },
+        },
+      },
+    },
   };
 
   return (

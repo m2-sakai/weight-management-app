@@ -11,12 +11,13 @@ async function seedUsers() {
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email TEXT NOT NULL UNIQUE,
-		    height NUMERIC NULL,
-        password TEXT NOT NULL
+        height NUMERIC NULL,
+        password TEXT NOT NULL,
+        goal NUMERIC NULL,
       );
     `;
 
-    console.log(`Created "wm-users" table`);
+    console.log(`Created "wm_users" table`);
 
     const insertedUsers = await Promise.all(
       users.map(async (user) => {
@@ -29,7 +30,7 @@ async function seedUsers() {
       })
     );
 
-    console.log(`Seeded ${insertedUsers.length} wm-users`);
+    console.log(`Seeded ${insertedUsers.length} wm_users`);
 
     return {
       createTable,
@@ -54,7 +55,7 @@ async function seedWeights() {
       );
     `;
 
-    console.log(`Created "wm-weights" table`);
+    console.log(`Created "wm_weights" table`);
 
     const insertedWeights = await Promise.all(
       weights.map(
