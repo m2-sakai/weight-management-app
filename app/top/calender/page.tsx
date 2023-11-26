@@ -12,6 +12,7 @@ import { UserSession } from '@/app/types/UserSession';
 import { getUser } from '@/app/lib/user';
 import { User } from '@/app/types/User';
 import { redirect } from 'next/navigation';
+import { DatesSetArg } from '@fullcalendar/core/index.js';
 
 type AddEventState = {
   date: string;
@@ -35,7 +36,7 @@ export default function Page() {
   const [email, setEmail] = useState<string>('');
   const [heights, setHeights] = useState<number>(0);
   const [currentWeights, setCurrentWeights] = useState<number>(0);
-  const [initialEvent, setInitialEvent] = useState<Event[]>([]);
+  const [currentEvent, setCurrentEvent] = useState<Event[]>([]);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [addEvent, setAddEvent] = useState<AddEventState>({ date: '', calenderApi: undefined });
   const [selectedDate, setSelectedDate] = useState<string>('');
@@ -68,7 +69,7 @@ export default function Page() {
           setCurrentWeights(weight.weight);
         }
       });
-      setInitialEvent(initialEventList);
+      setCurrentEvent(initialEventList);
     };
     data();
   }, []);
@@ -82,18 +83,47 @@ export default function Page() {
         });
         setIsOpenModal(true);
       } else {
-        const eventInfo = initialEvent.filter((event) => {
+        const eventInfo = currentEvent.filter((event) => {
           const compareDate = new Date(event.date)
             .toLocaleDateString('ja-JP', dateFormatOption)
             .split('/')
             .join('-');
           return compareDate === clickInfo.dateStr;
         });
-        setCurrentWeights(Number(eventInfo[0].title.replace('kg', '').trim()));
+        if (eventInfo.length !== 0) {
+          setCurrentWeights(Number(eventInfo[0].title.replace('kg', '').trim()));
+        }
       }
       setSelectedDate(clickInfo.dateStr);
     },
-    [selectedDate, initialEvent]
+    [selectedDate, currentEvent]
+  );
+
+  const handleDateSet = useCallback(
+    async (dateSetArg: DatesSetArg) => {
+      if (email !== '') {
+        const startMonth = dateSetArg.start.getMonth() + 1;
+        const endMonth = dateSetArg.end.getMonth() + 1;
+        let weightList = [];
+        if (endMonth - startMonth === 1) {
+          weightList = await fetchWeightsForCalender(email, startMonth);
+        } else {
+          weightList = await fetchWeightsForCalender(email, startMonth + 1);
+        }
+        const eventList: Event[] = [];
+        weightList.forEach((weight) => {
+          const event: Event = {
+            title: weight.weight.toString() + ' kg',
+            date: weight.date,
+            allDay: true,
+            display: 'list-item',
+          };
+          eventList.push(event);
+        });
+        setCurrentEvent(eventList);
+      }
+    },
+    [email]
   );
 
   return (
@@ -102,18 +132,22 @@ export default function Page() {
         plugins={[dayGridPlugin, interactionPlugin]}
         locale={jaLocale} // 日本語化
         businessHours={true} // 土日をグレーに塗る
-        editable={true}
-        initialDate={new Date()}
         contentHeight={'auto'}
         selectable={true}
         dateClick={(info) => {
           handleDateClick(info);
         }}
-        events={initialEvent}
+        events={currentEvent}
+        datesSet={(info) => {
+          handleDateSet(info);
+        }}
       />
       <p className="text-[30px]">体重: {currentWeights} kg</p>
       <p className="text-[20px]">
-        BMI: {(currentWeights / (heights / 100) / (heights / 100)).toFixed(1)}
+        BMI:{' '}
+        {currentWeights !== 0
+          ? (currentWeights / (heights / 100) / (heights / 100)).toFixed(1)
+          : 0.0}
       </p>
       {isOpenModal && (
         <InputModal
