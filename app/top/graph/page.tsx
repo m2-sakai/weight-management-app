@@ -117,6 +117,7 @@ export default function Page() {
   };
 
   const graphOptions = {
+    maintainAspectRatio: false,
     responsive: true,
     spanGaps: true,
     scales: {
@@ -154,7 +155,9 @@ export default function Page() {
   return (
     <div>
       <GraphTabs setDayRange={setDayRange} />
-      <Line height={200} options={graphOptions} data={data} />
+      <div className="h-screen-70 w-auto">
+        <Line options={graphOptions} data={data} />
+      </div>
     </div>
   );
 }
