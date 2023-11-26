@@ -155,7 +155,7 @@ export default function Page() {
   return (
     <div>
       <GraphTabs setDayRange={setDayRange} />
-      <div className="h-screen-70 w-auto">
+      <div className="h-screen-60 md:h-screen-3/4 w-auto">
         <Line options={graphOptions} data={data} />
       </div>
     </div>
