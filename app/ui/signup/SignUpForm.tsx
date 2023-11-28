@@ -127,7 +127,7 @@ function SignInButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button className="mt-4 w-[130px]" aria-disabled={pending}>
+    <Button className="mt-4 w-[150px]" aria-disabled={pending}>
       サインアップ <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
     </Button>
   );

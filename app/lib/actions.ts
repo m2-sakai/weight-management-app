@@ -1,13 +1,12 @@
 'use server';
 
-import { auth, signIn } from '@/auth';
+import { auth, signIn, signOut } from '@/auth';
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import { UserSession } from '@/app/types/UserSession';
-import { signOut } from 'next-auth/react';
 
 const CreateUser = z.object({
   name: z.string(),
