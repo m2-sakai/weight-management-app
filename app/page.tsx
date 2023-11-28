@@ -24,7 +24,7 @@ export default function Page() {
           <div>
             このアプリは以下の機能を持っています。
             <li>
-              <strong>ログイン機能</strong>：各ユーザにパーソナライズされています。
+              <strong>認証機能</strong>：各ユーザにパーソナライズされています。
             </li>
             <li>
               <strong>カレンダー機能</strong>：毎日の体重を数値で管理することができます。
@@ -36,12 +36,12 @@ export default function Page() {
               <strong>チャット機能</strong>：優れたAIによる対話を行うことができます。
             </li>
           </div>
-          <p>さぁ！以下からログインし、新しい自分の始まりを体験しましょう。</p>
+          <p>さぁ！以下からサインインし、新しい自分の始まりを体験しましょう。</p>
           <Link
-            href="/login"
+            href="/signin"
             className="flex items-center gap-5 self-start rounded-lg bg-green-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-green-400 md:text-base"
           >
-            <span>ログイン</span>
+            <span>サインイン</span>
           </Link>
         </div>
       </div>
