@@ -1,7 +1,7 @@
 'use server';
 import { sql } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
-import { Weight } from '../types/Weight';
+import { Weight } from '@/app/types/Weight';
 
 export async function fetchWeightsForCalender(email: string, month: number) {
   noStore();

@@ -1,4 +1,4 @@
-import { Button } from '../common/Button';
+import { Button } from '@/app/ui/common/Button';
 import { PlayIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { registerWeight } from '@/app/lib/weight';
