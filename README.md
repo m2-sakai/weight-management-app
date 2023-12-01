@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 体重管理アプリ
 
-## Getting Started
+## 概要
 
-First, run the development server:
+本アプリは、日々の体重を記録し管理することができる体重管理アプリケーションです。
+
+## 機能
+
+本アプリでは以下の機能を有しています。
+
+| 機能名         | 説明                                       |
+| -------------- | ------------------------------------------ |
+| カレンダー機能 | 毎日の体重を数値で入力・管理できる         |
+| グラフ機能     | 毎日の体重の増減をグラフで見ることができる |
+| チャット機能   | 優れた AI と対話ができる                   |
+| 認証機能       | 各ユーザーごとにパーソナライズされる       |
+
+## 起動方法
+
+まず、本リポジトリをローカル環境に取り込みます。
+
+```bash
+git clone https://github.com/m2-sakai/weight-management-app.git
+cd weight-management-app
+```
+
+その後、以下で依存ライブラリをインストールします。
+
+```bash
+npm i
+```
+
+次に、本アプリは Vercel の DB を使用することを前提としていますので、事前に Vercel にログインして DB を作成してください。
+DB のテーブル定義は `scripts/seed.js` に記載されております。以下のコマンドを実行してテーブルを作成してください。
+
+```
+npm run seed
+```
+
+最後に以下のコマンドを実行し、[http://localhost:3000](http://localhost:3000) にアクセスしてください。
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

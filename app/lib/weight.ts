@@ -47,6 +47,7 @@ export async function fetchWeightByDate(email: string, date: string) {
 }
 
 export async function registerWeight(email: string, weight: number, date: string) {
+  noStore();
   try {
     await sql`
 		INSERT INTO wm_weights (user_id, weight, date)
